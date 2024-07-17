@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  mysql-master:
+    image: mysql:8.0                                # master 指定版本号为 8.0
+    container_name: mysql-master                    # master 容器名称
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456                   # master root 密码
+      MYSQL_ROOT_HOST: '%'                          # master 允许 root 在任意主机远程登录，% 表示任意主机，可以指定具体的 IP 或 IP 段
+      MYSQL_DATABASE: my-db                         # 初始化创建的数据库名称
+      MYSQL_USER: my-db-user                        # 初始化创建的普通数据库用户，将自动授予默认数据库所有权限
+      MYSQL_PASSWORD: 123456                        # 初始化创建的普通数据库用户的密码
+    ports: 
+      - '3306:3306'                                 # master 容器对外暴露的端口号
+    volumes:
+      - ./master/data/:/var/lib/mysql/
+      - ./master/conf/:/etc/mysql/conf.d/
+
+  # slave 的配置与 master 类似，这里不再赘述
+  mysql-slave: 
+    image: mysql:8.0                                
+    container_name: mysql-slave
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: my-db
+      MYSQL_USER: my-db-user
+      MYSQL_PASSWORD: 123456
+    ports:
+      - '3307:3306'
+    volumes:
+      - ./slave/data/:/var/lib/mysql/
+      - ./slave/conf/:/etc/mysql/conf.d/
