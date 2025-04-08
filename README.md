@@ -2,6 +2,10 @@
 
 查了许多资料，最终发现一篇文章比较用心： https://zhaojun.vip/archives/97/
 
+从库增加了 read_only 限制了只读，需要注意该选项只能限制平台用户，限制不了 root 权限用户。为了避免误操作，建议启动通过 set global super_read_only=true;(重启 MySQL 后失效)，这样会限制 root 权限用户也无法进行写入操作。（之所以没有把这个选项配置到配置文件中将限制无法进行连接）
+集群中不同服务的 server_id 应避免重复。
+
+
 如果是在windows上操作，两个my.cnf要将属性设置成只读即可。
 
 一、请注意：
